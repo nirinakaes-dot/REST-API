@@ -10,6 +10,10 @@ app = Flask(__name__)
 
 app.route('',methods =['GET'])
 def get_inventory():
+
+
+    if not name:
+       return ('Product not found',404)
     pass
 
 
@@ -19,6 +23,8 @@ def get_inventory():
 app.route('',methods=['POST'])
 def create():
     data = requests.get_json()
+    new = 
+    
     pass
 
 
@@ -45,3 +51,5 @@ def delete():
 
 
 
+if __name__ == "__main__":
+   app.run(debug=True)
