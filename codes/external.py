@@ -20,3 +20,23 @@ def fetch_barcode(barcode):
         'barcode' :barcode
      }
 
+def fetch_name(name,limit =5):
+    url = f"{Base_URL}/cgi/search.pl"
+    params = {
+        "search_terms": name,
+        "search_simple": 1,
+        "json": 1,
+        "page_size":limit,
+    }
+    response = requests.get(url, params=params, timeout=10)
+    data = response.json()
+ 
+    results = []
+    for product in data.get("products", []):
+        results.append({
+            "name": product.get("product_name") or "Unknown product",
+            "brand": product.get("brands") or "Unknown brand",
+            "barcode": product.get("code") or "",
+        })
+    return results
+ 
