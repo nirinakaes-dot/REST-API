@@ -1,5 +1,4 @@
-from flask import Flask, jsonify 
-import requests
+from flask import Flask, jsonify ,request
 
 app = Flask(__name__)
 
@@ -26,34 +25,57 @@ def get_item(item_ID):
 
 ################################POST METHOD #####################################
 
-app.route('',methods=['POST'])
+@app.route('/items',methods=['POST'])
 def create():
-    data = requests.get_json()
-    new = 
+    data = request.get_json()
+    if not data.get('name'):
+        return jsonify({'error':'Name is required'}),400
     
-    pass
+    item= store.create(
+        name = data.get('name'),
+        brand = data.get('brand','Unknown'),
+        price = data.get('price',0.0),
+        barcode= data.get('barcode')
 
+    )
 
-
+    return jsonify(item),201
 
 ########################PATCH METHOD #####################################
 
-app.route('',methods=['PATCH'])
+@app.route('/items/<int:item_ID>',methods=['PATCH'])
 
-def update():
-    data = requests.get_json()
+def update(item_ID):
+    data = request.get_json()
 
-    pass
+    item= store.get_by_ID(item_ID)
+    if not item:
+        return jsonify({'error':'Item does not exist'}),404
+    
+    updated = store.update(item_ID,data)
+    return jsonify(updated),200
+
+
 
 
 
 
 ################################DELETE METHOD#############################
-app.route('',methods=['DELETE'])
-def delete():
-    data = requests.get_json()
+@app.route('/items/<int:item_ID>',methods=['DELETE'])
+def delete(item_ID):
+    data = request.get_json()
+    item = store.get_by_ID(item_ID)
 
-    pass
+    if not item:
+        return jsonify({'error':'The item does not exist'}),404
+    
+
+    deleted = store.delete(item_ID)
+
+    return jsonify(f'item with ID: {item_ID} is successfully deleted'),200
+
+
+
 
 
 
